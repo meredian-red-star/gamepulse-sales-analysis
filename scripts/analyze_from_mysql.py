@@ -1,8 +1,9 @@
 """Create five sales charts from MySQL without changing database data.
 
-Requires pandas, sqlalchemy, pymysql[rsa], and matplotlib.
+Install dependencies: python -m pip install -r requirements.txt
 Set MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, and MYSQL_DATABASE
 as for load_to_mysql.py, then run: python scripts/analyze_from_mysql.py
+The project-root .env file is optional; existing environment values take priority.
 The database must already contain the video_game_sales table and data.
 """
 
@@ -15,6 +16,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.ticker import StrMethodFormatter
 import pandas as pd
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import URL
 
@@ -37,6 +39,8 @@ def bar_chart(data, category, title, output_folder, filename):
 
 
 def main():
+    project_folder = Path(__file__).resolve().parent.parent
+    load_dotenv(project_folder / ".env", override=False)
     url = URL.create(
         "mysql+pymysql",
         host=os.getenv("MYSQL_HOST", "127.0.0.1"),

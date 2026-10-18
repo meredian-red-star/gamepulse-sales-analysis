@@ -1,9 +1,10 @@
 """Load the cleaned CSV into MySQL. The CSV files are never changed.
 
-Install dependencies: python -m pip install pandas sqlalchemy 'pymysql[rsa]'
+Install dependencies: python -m pip install -r requirements.txt
 Start a local MySQL server before running this script.
 Set MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, and MYSQL_DATABASE
-in your environment. Defaults below are local examples, not real credentials.
+in your environment or the project-root .env file. Existing environment values
+take priority. Defaults below are local examples, not real credentials.
 The account needs permission to create the database/table and read/write rows.
 
 Run: python scripts/load_to_mysql.py
@@ -15,6 +16,7 @@ import os
 from pathlib import Path
 
 import pandas as pd
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import URL
 
@@ -28,6 +30,7 @@ def main():
     args = parser.parse_args()
 
     project_folder = Path(__file__).resolve().parent.parent
+    load_dotenv(project_folder / ".env", override=False)
     sales = pd.read_csv(
         project_folder / "data" / "vgsales_clean.csv",
         dtype={"Rank": "int64", "Year": "int64"},
