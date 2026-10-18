@@ -103,7 +103,11 @@ def main():
            ylabel="Global sales (millions of units)", ylim=(0, None))
     ax.xaxis.set_major_formatter(StrMethodFormatter("{x:.0f}"))
     ax.grid(alpha=0.2)
-    fig.tight_layout()
+    if years["Year"].max() > 2016:
+        ax.axvspan(2016.5, years["Year"].max(), color="gray", alpha=0.15)
+    fig.text(0.5, 0.02, "Coverage after 2016 is sparse; later totals may be incomplete.",
+             ha="center", fontsize=10, color="#555555")
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
     save_chart(fig, output_folder, "global_sales_by_year.png")
     peak = years.loc[years["total_global_sales"].idxmax()]
     print(f"Year: {int(peak['Year'])} has the highest global sales total at "
